@@ -67,6 +67,7 @@ while continue_game == True:
     cardinal_attr_2 = {'n_to':'n', 's_to':'s', 'w_to':'w', 'e_to':'e'}
 
     def check_room(input_direction, begin_location=current_loc):
+        
         # Return a list of empty rooms
         no_room = []
         for el in cardinal_attr.values():
@@ -78,7 +79,6 @@ while continue_game == True:
 
 
     # Print an error message if the movement isn't allowed.
-    #
     while input_direction in no_room:
         print('A wall is in your way. Please try again. \n')
         input_direction = input('Where to traveler? Enter n, s, e or w: \n')
@@ -91,8 +91,7 @@ while continue_game == True:
         desc = [k for k, v in room.items() if v == cur_room][0]
         print(f'\n{cur_room}\n==========\n')
 
-    
-
+    # Input y to continue the game or q to quit
     input_continue = input('Continue further, enter y or quit, enter q: ')
 
     # Loop till we get a y or a q
@@ -102,9 +101,8 @@ while continue_game == True:
         # If y then goes back to the while loop, line 47
         if input_continue == 'y':
             continue
-        # If q then game ends
+        # If the user enters "q", quit the game.
         else:
             print('\nEnd of Game\n==========\n')
             continue_game = False
-    # If the user enters "q", quit the game.
-
+    
