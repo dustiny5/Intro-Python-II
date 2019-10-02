@@ -67,7 +67,6 @@ while continue_game == True:
     cardinal_attr_2 = {'n_to':'n', 's_to':'s', 'w_to':'w', 'e_to':'e'}
 
     def check_room(input_direction, begin_location=current_loc):
-        
         # Return a list of empty rooms
         no_room = []
         for el in cardinal_attr.values():
