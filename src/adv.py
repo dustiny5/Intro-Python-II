@@ -35,73 +35,48 @@ room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
 
-#
-# Main
-#
-
-# Make a new player object that is currently in the 'outside' room.
+# Input player name
 input_player_name = input('What is your name traveler? ')
+
+# Continue game - Game continues to play until False or break
 continue_game = True
-desc = 'outside'
+
+# Set the first room
+current_loc = room['outside']
 
 while continue_game == True:
     
-    current_loc = room[desc]
-
+    # Instantiate Player and print current location
     player = Player(input_player_name, current_loc)
-
-    # Write a loop that:
-    #
-    # * Prints the current room name
     print(f'\n{current_loc}\n==========\n')
-    # * Prints the current description (the textwrap module might be useful here).
-    # * Waits for user input and decides what to do.
-    #
-    input_direction = input('Where to traveler? Enter n, s, e or w: ')
-    while input_direction not in ['n', 's', 'e', 'w']:
-        input_direction = input('Incorrect. Please enter: n, s, e or w ')
-    # If the user enters a cardinal direction, attempt to move to the room there.
 
-    # Dictionary of cardinal direction k,v and v,k
+    # Ask user for the direction
+    input_direction = input('Where to traveler? Enter n, s, e, w or q(quit): ')
+
+    # Re-enter input until we get 'n' 's' 'e' 'w' or 'q'
+    while input_direction not in ['n', 's', 'e', 'w', 'q']:
+        input_direction = input('Incorrect. Please enter: n, s, e, w, or q(quit) ')
+
+    # If q then quit and end the game
+    if input_direction == 'q':
+        print('End Game')
+        break
+
+    # Set key to the inputs and values to the attributes
     cardinal_attr = {'n':'n_to', 's':'s_to', 'w':'w_to', 'e':'e_to'}
-    cardinal_attr_2 = {'n_to':'n', 's_to':'s', 'w_to':'w', 'e_to':'e'}
 
-    def check_room(input_direction, begin_location=current_loc):
-        # Return a list of empty rooms
-        no_room = []
-        for el in cardinal_attr.values():
-            if el not in begin_location.__dict__.keys():
-                no_room.append(cardinal_attr_2[el])
-        return no_room
-            
-    no_room = check_room(input_direction)
+    # Check if room instance has the attribute
+    while hasattr(current_loc, cardinal_attr[input_direction]) == False:
+        print('A wall is in your way. Please try again.')
+        input_direction = input('Please enter: n, s, e or w or q(quit): \n')
 
-
-    # Print an error message if the movement isn't allowed.
-    while input_direction in no_room:
-        print('A wall is in your way. Please try again. \n')
-        input_direction = input('Where to traveler? Enter n, s, e or w: \n')
-    else:
-
-        # Get value from the cardinal_attr dictionary and retrieves the attribute from the current room
-        cur_room= room[desc].__dict__[cardinal_attr[input_direction]]
-
-        # Update desc from the key in the room dictionary
-        desc = [k for k, v in room.items() if v == cur_room][0]
-        print(f'\n{cur_room}\n==========\n')
-
-    # Input y to continue the game or q to quit
-    input_continue = input('Continue further, enter y or quit, enter q: ')
-
-    # Loop till we get a y or a q
-    while (input_continue != 'y') and (input_continue != 'q'):
-        input_continue = input('Incorrect. Please enter y to continue or q to quit: ')
-    else:
-        # If y then goes back to the while loop, line 47
-        if input_continue == 'y':
-            continue
-        # If the user enters "q", quit the game.
-        else:
-            print('\nEnd of Game\n==========\n')
+        # If input is 'q' then we quit the game
+        if input_direction == 'q':
+            print('End Game')
             continue_game = False
+            break
+
+    # Update current location by getting the attribute of the previous current location
+    else:
+        current_loc = getattr(current_loc, cardinal_attr[input_direction])
     
