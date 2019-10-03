@@ -110,19 +110,23 @@ while continue_game == True:
 
     while input_direction not in commands:
         input_direction = input('Incorrect. Please enter: n, s, e, w, i(inventory), or q(quit): ')
-        
+
     # Check inventory and drop item
     while input_direction == 'i':
         if player.player_item == {}:
             print('No Inventory')
             input_direction = input('Please enter: n, s, e, w, i(inventory), or q(quit): ')
+        
         elif player.player_item != {}:
             print(player.player_item)
             drop_item = input('Do you want to drop an item? Enter Item name or press enter to continue: ')
+
+            # Loop till we get the corret answer
             while (drop_item not in player.player_item) and (drop_item != ''):
                 drop_item = input('Enter the correct item name or press enter to continue: ')
+
+            # Drop item from player and add item to room
             if drop_item != '':
-                # Add item to room
                 for k,v in player.player_item.items():
                     if drop_item == k:
                         print({k:v})
@@ -147,8 +151,10 @@ while continue_game == True:
     while hasattr(current_loc, cardinal_attr[input_direction]) == False:
         print('A wall is in your way. Please try again.')
         input_direction = input('Please enter: n, s, e, w, i(inventory), or q(quit): \n')
+
         while input_direction not in commands:
             input_direction = input('Incorrect. Please enter: n, s, e, w, i(inventory), or q(quit) ')
+
         # Check inventory
         while input_direction == 'i':
             if player.player_item == {}:
