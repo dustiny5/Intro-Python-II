@@ -110,6 +110,8 @@ while continue_game == True:
 
     while input_direction not in commands:
         input_direction = input('Incorrect. Please enter: n, s, e, w, i(inventory), or q(quit): ')
+        
+    # Check inventory and drop item
     while input_direction == 'i':
         if player.player_item == {}:
             print('No Inventory')
@@ -147,6 +149,7 @@ while continue_game == True:
         input_direction = input('Please enter: n, s, e, w, i(inventory), or q(quit): \n')
         while input_direction not in commands:
             input_direction = input('Incorrect. Please enter: n, s, e, w, i(inventory), or q(quit) ')
+        # Check inventory
         while input_direction == 'i':
             if player.player_item == {}:
                 print('No Inventory')
