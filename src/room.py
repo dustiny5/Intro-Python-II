@@ -1,8 +1,6 @@
 # Implement a class to hold room information. This should have name and
 # description attributes.
 class Room:
-    '''Room Class'''
-
     def __init__(self, name, description):
         self.name = name
         self.description = description
@@ -15,14 +13,17 @@ class Room:
 
     def remove_item(self, r_item_name):
         print(f'Remove {r_item_name} from {self.name}')
-        del self.room_item[r_item_name]
-
+        keys = [key for key in r_item_name]
+        for k in keys:
+            self.room_item.pop(k)
+        
+    
     def __str__(self):
-        item_list = ''
-        for k,v in self.room_item.items():
-            item_list += f'{v}\n=====\n'
-
-        return f'Current Position: {self.name}\n-----\nDescription: {self.description}\n-----\nRoom Item:\n-----\n{item_list}'
+        if self.room_item == {}:
+            no_item = 'No Items'
+            return f'Name: {self.name}\nDescription: {self.description}\nRoom Items: {no_item}'
+        else:
+            return f'Name: {self.name}\nDescription: {self.description}\nRoom Items: {self.room_item}'
 
     def __repr__(self):
         return f'Room({repr(self.name)}, {repr(self.description)})'

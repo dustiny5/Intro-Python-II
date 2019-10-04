@@ -1,7 +1,6 @@
 from room import Room
 from player import Player
 from item import Item
-
 # Declare all the rooms
 
 room = {
@@ -61,115 +60,48 @@ room['treasure'].add_item(items_['treasure'])
 # print(player.player_item)
 
 
-# Input player name
-input_player_name = input('What is your name traveler? ')
 
-# Continue game - Game continues to play until False or break
+#
+# Main
+#
+
+# Make a new player object that is currently in the 'outside' room.
+player = Player('Dustin', room['outside'])
 continue_game = True
-
-# Set the first room
-current_loc = room['outside']
-
-# Instantiate Player
-player = Player(input_player_name, current_loc)
-
-while continue_game == True:
-
-    print(f'\n{current_loc}\n==========\n')
-
-    if current_loc.room_item == {}:
-        print('No Items\n-----\n')
-    else:
-        print('Yes Items\n-----\n')
-        # Ask user if they want to pick up an item
-        item_pick_up = input('Pick up item? Please type item name or enter to continue: ')
-
-        # Loop until we get the right answer
-        while (item_pick_up not in current_loc.room_item) and (item_pick_up != ''):
-            item_pick_up = input('Wrong item name. Please type item name or enter to continue: ')
-
-        if item_pick_up != '':
-            # Add to player inventory
-            print(f'Picked-up: {item_pick_up}')
-
-            for k,v in current_loc.room_item.items():
-                if item_pick_up == k:
-                    print({k:v})
-                    player.add_item({k:v})
-
-            # Remove from room
-            current_loc.remove_item(item_pick_up)
-            print(player.player_item)
-
-        
-    # Ask user for the direction
-    input_direction = input('Where to traveler? Enter n, s, e, w, i(inventory), or q(quit): ')
-
-    # Re-enter input until we get 'n' 's' 'e' 'w' 'i'or 'q'
-    commands = ['n', 's', 'e', 'w', 'i', 'q']
-
-    while input_direction not in commands:
-        input_direction = input('Incorrect. Please enter: n, s, e, w, i(inventory), or q(quit): ')
-
-    # Check inventory and drop item
-    while input_direction == 'i':
-        if player.player_item == {}:
-            print('No Inventory')
-            input_direction = input('Please enter: n, s, e, w, i(inventory), or q(quit): ')
-        
-        elif player.player_item != {}:
-            print(player.player_item)
-            drop_item = input('Do you want to drop an item? Enter Item name or press enter to continue: ')
-
-            # Loop till we get the corret answer
-            while (drop_item not in player.player_item) and (drop_item != ''):
-                drop_item = input('Enter the correct item name or press enter to continue: ')
-
-            # Drop item from player and add item to room
-            if drop_item != '':
-                for k,v in player.player_item.items():
-                    if drop_item == k:
-                        print({k:v})
-                        current_loc.add_item({k:v})
-
-                print(f'Room has {drop_item}')
-                player.remove_item(drop_item)
-                        
-            else:
-                input_direction = input('Please enter: n, s, e, w, i(inventory), or q(quit): ')
-        
-
-    # If q then quit and end the game
-    if input_direction == 'q':
+while continue_game:
+    current_room = player.current_room
+    user_cmd = player.get_input()
+    if user_cmd == 'q':
         print('End Game')
         break
-
-    # Set key to the inputs and values to the attributes
-    cardinal_attr = {'n':'n_to', 's':'s_to', 'w':'w_to', 'e':'e_to'}
-
-    # Check if room instance has the attribute
-    while hasattr(current_loc, cardinal_attr[input_direction]) == False:
-        print('A wall is in your way. Please try again.')
-        input_direction = input('Please enter: n, s, e, w, i(inventory), or q(quit): \n')
-
-        while input_direction not in commands:
-            input_direction = input('Incorrect. Please enter: n, s, e, w, i(inventory), or q(quit) ')
-
-        # Check inventory
-        while input_direction == 'i':
-            if player.player_item == {}:
-                print('No Inventory')
-                input_direction = input('Please enter: n, s, e, w, i(inventory), or q(quit): ')
-            elif player.player_item != {}:
-                print(player.player_item)
-                input_direction = input('Please enter: n, s, e, w, i(inventory), or q(quit): ')
-    
-        # If input is 'q' then we quit the game
-        if input_direction == 'q':
-            print('End Game')
-            continue_game = False
-            break
-
-    # Update current location by getting the attribute of the previous current location
+    elif user_cmd == 'take':
+        if current_room.room_item == {}:
+            print('No items to pick-up')
+            continue
+        else:
+            # Add items in room
+            player.add_item(current_room.room_item)
+            # Delete items in room
+            current_room.remove_item(current_room.room_item)
+    elif user_cmd == 'drop':
+        if player.player_item == {}:
+            print('No items to drop')
+            continue
+        else:
+            # Remove items from player
+            dropped_item = player.remove_item(player.player_item)
+            # Drop to room
+            current_room.add_item(dropped_item)
     else:
-        current_loc = getattr(current_loc, cardinal_attr[input_direction])
+        player.move_room()
+        print(player.current_room)
+# Write a loop that:
+#
+# * Prints the current room name
+# * Prints the current description (the textwrap module might be useful here).
+# * Waits for user input and decides what to do.
+#
+# If the user enters a cardinal direction, attempt to move to the room there.
+# Print an error message if the movement isn't allowed.
+#
+# If the user enters "q", quit the game.
